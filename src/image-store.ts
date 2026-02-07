@@ -101,7 +101,12 @@ export class ImageStore extends DurableObject {
 
     private close(ws: WebSocket, code: number, reason: string): void {
         if (this.subscribers.close(ws, code, reason)) {
-            this.notify(JSON.stringify({ subscribers: this.subscribers.size }));
+            this.notify(
+                JSON.stringify({
+                    subscribers: this.subscribers.size,
+                    publishers: this.publishers.size,
+                }),
+            );
         } else {
             this.publishers.close(ws, code, reason);
         }
