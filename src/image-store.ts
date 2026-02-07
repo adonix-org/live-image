@@ -68,7 +68,12 @@ export class ImageStore extends DurableObject {
     private connect(sessions: WebSocketSessions, type: string): Promise<Response> {
         const client = sessions.create().acceptWebSocket(this.ctx, [type]);
 
-        this.notify(JSON.stringify({ subscribers: this.subscribers.size }));
+        this.notify(
+            JSON.stringify({
+                subscribers: this.subscribers.size,
+                publishers: this.publishers.size,
+            }),
+        );
         return new WebSocketUpgrade(client).response();
     }
 
