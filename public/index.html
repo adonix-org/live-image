@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Live Image Viewer</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #111;
+            color: #eee;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        img {
+            max-width: 90vw;
+            border: 2px solid #444;
+            border-radius: 8px;
+        }
+
+        #status {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="status">Connecting to WebSocket…</div>
+    <img id="liveImage" src="" />
+
+    <script>
+        (() => {
+            const cameraId = "c121";
+
+            const WS_URL = new URL(`/subscribe/${cameraId}`, globalThis.window.origin).href.replace(/^http/, "ws");
+            const LIVE_URL = new URL(`/live/${cameraId}`, globalThis.window.origin).href;
+
+            const img = document.getElementById("liveImage");
+            const status = document.getElementById("status");
+
+            img.src = LIVE_URL + "?t=" + Date.now();
+
+            let ws;
+
+            function connect() {
+                ws = new WebSocket(WS_URL);
+
+                ws.onopen = () => {
+                    status.textContent = "Online 🟢";
+                    console.log("WS connected");
+                };
+
+                ws.onmessage = (event) => {
+                    console.log("WS message:", event.data);
+                    const newUrl = LIVE_URL + "?t=" + Date.now();
+                    const preload = new Image();
+                    preload.onload = () => {
+                        img.src = newUrl;
+                    };
+                    preload.src = newUrl;
+                };
+
+                ws.onclose = () => {
+                    status.textContent = "Offline 🔴 reconnecting...";
+                    console.log("WS closed, reconnecting...");
+                    setTimeout(connect, 2000);
+                };
+
+                ws.onerror = (err) => {
+                    console.error("WS error:", err);
+                    ws.close();
+                };
+            }
+
+            connect();
+        })();
+    </script>
+
+</body>
+
+</html>

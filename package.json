@@ -1,0 +1,29 @@
+{
+    "name": "live-image",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "types": "mkdir -p ./types && wrangler types --config wrangler.jsonc ./types/cloudflare.d.ts",
+        "prebuild": "npm run lint && npm run types",
+        "build": "wrangler build",
+        "deploy": "tsc && wrangler deploy",
+        "dev": "wrangler dev",
+        "start": "wrangler dev",
+        "lint": "eslint ./src"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.2",
+        "@typescript-eslint/eslint-plugin": "^8.54.0",
+        "@typescript-eslint/parser": "^8.54.0",
+        "eslint": "^9.39.2",
+        "eslint-plugin-import": "^2.32.0",
+        "jiti": "^2.6.1",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.54.0",
+        "wrangler": "^4.63.0"
+    },
+    "dependencies": {
+        "@adonix.org/cloud-spark": "^2.2.0"
+    }
+}

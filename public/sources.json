@@ -1,0 +1,10 @@
+{
+    "sources": [
+        {
+            "id": "c121",
+            "type": "camera",
+            "path": "/live/c121",
+            "description": "NW Front Yard"
+        }
+    ]
+}
