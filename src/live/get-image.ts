@@ -1,7 +1,7 @@
 import { SourceWorker, ImageContext } from "../source-worker";
 import { getImageType } from "../utils";
 import { ImageResponse } from "../response";
-import { GET, Method } from "@adonix.org/cloud-spark";
+import { GET, Method, Time } from "@adonix.org/cloud-spark";
 import { Paths } from "../routes";
 import { cache } from "@adonix.org/cloud-spark/cache";
 
@@ -24,8 +24,8 @@ export class GetImage extends SourceWorker {
         const imageType = image && getImageType(image);
         if (imageType) {
             return this.response(ImageResponse, image, imageType, {
-                "max-age": 300,
-                "s-maxage": 300,
+                "max-age": Time.Day,
+                "s-maxage": Time.Day,
             });
         }
 
