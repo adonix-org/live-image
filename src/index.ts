@@ -1,13 +1,4 @@
-import {
-    DELETE,
-    GET,
-    HEAD,
-    Method,
-    OPTIONS,
-    POST,
-    RouteWorker,
-} from "@adonix.org/cloud-spark";
-import { ImageStore } from "./image-store";
+import { DELETE, GET, HEAD, Method, OPTIONS, POST, RouteWorker } from "@adonix.org/cloud-spark";
 import { Routes } from "./routes";
 
 class LiveImage extends RouteWorker {
@@ -20,6 +11,6 @@ class LiveImage extends RouteWorker {
     }
 }
 
-export { ImageStore };
+export { ImageStore } from "./image-store";
 
 export default LiveImage.ignite();

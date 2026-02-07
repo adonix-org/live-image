@@ -7,8 +7,8 @@ export class ImageStore extends DurableObject {
     private static readonly SUBSCRIBE = "subscribe";
     private static readonly PUBLISH = "publish";
 
-    private subscribers = new WebSocketSessions();
-    private publishers = new WebSocketSessions();
+    private readonly subscribers = new WebSocketSessions();
+    private readonly publishers = new WebSocketSessions();
 
     constructor(ctx: DurableObjectState, env: Env) {
         super(ctx, env);
