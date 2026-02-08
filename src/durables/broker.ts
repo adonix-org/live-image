@@ -13,17 +13,17 @@ export class EventBroker {
     private readonly publishers = new Publishers();
 
     constructor(protected readonly ctx: DurableObjectState) {
-        this.subscribers.restoreAll(this.ctx.getWebSockets(EventType.SUBSCRIBE));
         this.publishers.restoreAll(this.ctx.getWebSockets(EventType.PUBLISH));
+        this.subscribers.restoreAll(this.ctx.getWebSockets(EventType.SUBSCRIBE));
     }
 
     public onFetch(request: Request): Promise<Response> {
         const path = new URL(request.url).pathname;
         if (path.startsWith(`/${EventType.PUBLISH}/`)) {
-            return this.publisher();
+            return this.connect(this.publishers, EventType.PUBLISH);
         }
         if (path.startsWith(`/${EventType.SUBSCRIBE}/`)) {
-            return this.subscriber();
+            return this.connect(this.subscribers, EventType.SUBSCRIBE);
         }
         return new NotFound().response();
     }
@@ -42,14 +42,6 @@ export class EventBroker {
     public notify(): void {
         this.subscribers.publish();
         this.publishers.online(this.subscribers);
-    }
-
-    private publisher(): Promise<Response> {
-        return this.connect(this.publishers, EventType.PUBLISH);
-    }
-
-    private subscriber(): Promise<Response> {
-        return this.connect(this.subscribers, EventType.SUBSCRIBE);
     }
 
     private connect(sessions: Sessions, type: EventType): Promise<Response> {
