@@ -1,8 +1,8 @@
-import { SourceWorker, ImageContext } from "./source-worker";
-import { getImageType } from "../utils";
-import { ImageResponse } from "../response";
+import { SourceWorker, ImageContext } from "../source";
+import { getImageType } from "../../utils";
+import { ImageResponse } from "../../response";
 import { GET, Method, Time } from "@adonix.org/cloud-spark";
-import { Paths } from "../routes";
+import { Paths } from "../../routes";
 import { cache } from "@adonix.org/cloud-spark/cache";
 
 export class GetImage extends SourceWorker {

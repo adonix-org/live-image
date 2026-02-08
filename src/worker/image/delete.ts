@@ -1,7 +1,7 @@
-import { SuccessJson } from "../response";
+import { SuccessJson } from "../../response";
 import { DELETE, Method } from "@adonix.org/cloud-spark";
-import { AuthImage } from "./auth-image";
-import { ImageContext } from "./source-worker";
+import { AuthImage } from "./auth";
+import { ImageContext } from "../source";
 
 export class DeleteImage extends AuthImage {
     protected get method(): Method {

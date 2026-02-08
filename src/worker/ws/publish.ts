@@ -1,6 +1,6 @@
-import { auth } from "../middleware/authorization";
-import { Paths } from "../routes";
-import { WebSocketWorker } from "./websocket-worker";
+import { auth } from "../../middleware/authorization";
+import { Paths } from "../../routes";
+import { WebSocketWorker } from "./worker";
 
 export class Publish extends WebSocketWorker {
     protected get path(): string {

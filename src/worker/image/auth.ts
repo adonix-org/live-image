@@ -1,6 +1,6 @@
-import { SourceWorker } from "./source-worker";
-import { auth } from "../middleware/authorization";
-import { Paths } from "../routes";
+import { SourceWorker } from "../source";
+import { auth } from "../../middleware/authorization";
+import { Paths } from "../../routes";
 
 export abstract class AuthImage extends SourceWorker {
     protected get path(): string {

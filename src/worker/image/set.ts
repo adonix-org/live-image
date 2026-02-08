@@ -1,8 +1,8 @@
-import { getImageType } from "../utils";
-import { SuccessJson } from "../response";
+import { getImageType } from "../../utils";
+import { SuccessJson } from "../../response";
 import { BadRequest, Method, POST } from "@adonix.org/cloud-spark";
-import { AuthImage } from "./auth-image";
-import { ImageContext } from "./source-worker";
+import { AuthImage } from "./auth";
+import { ImageContext } from "../source";
 
 export class SetImage extends AuthImage {
     protected get method(): Method {

@@ -1,5 +1,5 @@
-import { Paths } from "../routes";
-import { WebSocketWorker } from "./websocket-worker";
+import { Paths } from "../../routes";
+import { WebSocketWorker } from "./worker";
 
 export class Subscribe extends WebSocketWorker {
     protected get path(): string {
