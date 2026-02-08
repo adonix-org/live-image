@@ -1,5 +1,5 @@
 import { GET, Method } from "@adonix.org/cloud-spark";
-import { SourceWorker, ImageContext } from "../source-worker";
+import { SourceWorker, ImageContext } from "./source-worker";
 import { websocket } from "@adonix.org/cloud-spark/websocket";
 
 export abstract class WebSocketWorker extends SourceWorker {

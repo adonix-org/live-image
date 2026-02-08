@@ -1,5 +1,5 @@
 import { Method, NotFound, PathParams, RouteWorker } from "@adonix.org/cloud-spark";
-import { ImageStore } from "./image-store";
+import { ImageStore } from "../websocket/image-store";
 
 export interface ImageContext {
     sourceId: string;

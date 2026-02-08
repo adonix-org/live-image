@@ -56,6 +56,9 @@
 
                 ws.onmessage = (event) => {
                     console.log("WS message:", event.data);
+                    // Acknowledge publish event.
+                    ws.send(JSON.stringify({ event: "ack" }));
+
                     const newUrl = LIVE_URL + "?t=" + Date.now();
                     const preload = new Image();
                     preload.onload = () => {

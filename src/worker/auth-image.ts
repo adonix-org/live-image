@@ -1,4 +1,4 @@
-import { SourceWorker } from "../source-worker";
+import { SourceWorker } from "./source-worker";
 import { auth } from "../middleware/authorization";
 import { Paths } from "../routes";
 

@@ -11,6 +11,6 @@ class LiveImage extends RouteWorker {
     }
 }
 
-export { ImageStore } from "./image-store";
+export { ImageStore } from "./websocket/image-store";
 
 export default LiveImage.ignite();

@@ -1,14 +1,15 @@
 import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
 import { WebSocketSessions } from "@adonix.org/cloud-spark/sessions";
 import { DurableObject } from "cloudflare:workers";
+import { Publishers, Subscribers } from "./sessions";
 
 export class ImageStore extends DurableObject {
     private static readonly KEY = "image:array";
     private static readonly SUBSCRIBE = "subscribe";
     private static readonly PUBLISH = "publish";
 
-    private readonly subscribers = new WebSocketSessions();
-    private readonly publishers = new WebSocketSessions();
+    private readonly subscribers = new Subscribers();
+    private readonly publishers = new Publishers();
 
     constructor(ctx: DurableObjectState, env: Env) {
         super(ctx, env);
@@ -22,13 +23,8 @@ export class ImageStore extends DurableObject {
 
     public async put(image: ArrayBuffer): Promise<void> {
         await this.ctx.storage.put<ArrayBuffer>(this.getKey(), image);
-        this.broadcast(
-            JSON.stringify({
-                message: "image",
-                size: image.byteLength,
-                timestamp: new Date().toISOString(),
-            }),
-        );
+        this.subscribers.publish();
+        this.publishers.online(this.subscribers);
     }
 
     public async get(): Promise<ArrayBuffer | undefined> {
@@ -37,89 +33,44 @@ export class ImageStore extends DurableObject {
 
     public async delete(): Promise<void> {
         await this.ctx.storage.delete(this.getKey());
-        this.broadcast(
-            JSON.stringify({
-                message: "image",
-                size: 0,
-                timestamp: new Date().toISOString(),
-            }),
-        );
+        this.subscribers.publish();
+        this.publishers.online(this.subscribers);
     }
 
     public override fetch(request: Request): Promise<Response> {
         const path = new URL(request.url).pathname;
         if (path.startsWith(`/${ImageStore.PUBLISH}/`)) {
-            return this.publish();
+            return this.publisher();
         }
         if (path.startsWith(`/${ImageStore.SUBSCRIBE}/`)) {
-            return this.subscribe();
+            return this.subscriber();
         }
         return new NotFound().response();
     }
 
-    private publish(): Promise<Response> {
+    private publisher(): Promise<Response> {
         return this.connect(this.publishers, ImageStore.PUBLISH);
     }
 
-    private subscribe(): Promise<Response> {
+    private subscriber(): Promise<Response> {
         return this.connect(this.subscribers, ImageStore.SUBSCRIBE);
     }
 
     private connect(sessions: WebSocketSessions, type: string): Promise<Response> {
         const client = sessions.create().acceptWebSocket(this.ctx, [type]);
-
-        this.notify(
-            JSON.stringify({
-                subscribers: this.subscribers.size,
-                publishers: this.publishers.size,
-            }),
-        );
+        this.publishers.online(this.subscribers);
         return new WebSocketUpgrade(client).response();
-    }
-
-    public broadcast(message: string): void {
-        for (const session of this.subscribers) {
-            try {
-                session.send(message);
-            } catch (error) {
-                console.error(error);
-                session.close(1011, String(error));
-            }
-        }
-    }
-
-    public notify(message: string): void {
-        for (const session of this.publishers) {
-            try {
-                session.send(message);
-            } catch (error) {
-                console.error(error);
-                session.close(1011, String(error));
-            }
-        }
     }
 
     private close(ws: WebSocket, code: number, reason: string): void {
         if (!this.subscribers.close(ws, code, reason)) {
             this.publishers.close(ws, code, reason);
         }
-        this.notify(
-            JSON.stringify({
-                subscribers: this.subscribers.size,
-                publishers: this.publishers.size,
-            }),
-        );
+        this.publishers.online(this.subscribers);
     }
 
     public override webSocketMessage(ws: WebSocket, message: string): void {
-        if (this.publishers.get(ws)) {
-            this.broadcast(message);
-            return;
-        }
-
-        // Subscribers should not be sending messages.
-        const subscriber = this.subscribers.get(ws);
-        if (subscriber) subscriber.close(1008, "Policy Violation");
+        this.subscribers.acknowledge(ws);
     }
 
     public override webSocketClose(ws: WebSocket, code: number, reason: string): void {

@@ -1,9 +1,9 @@
 import { DELETE, GET, POST, RouteTable } from "@adonix.org/cloud-spark";
-import { DeleteImage } from "./live/delete-image";
-import { GetImage } from "./live/get-image";
-import { SetImage } from "./live/set-image";
-import { Publish } from "./websocket/publish";
-import { Subscribe } from "./websocket/subscribe";
+import { DeleteImage } from "./worker/delete-image";
+import { GetImage } from "./worker/get-image";
+import { SetImage } from "./worker/set-image";
+import { Publish } from "./worker/publish";
+import { Subscribe } from "./worker/subscribe";
 
 export const Paths = {
     liveImage: "/live/:source",

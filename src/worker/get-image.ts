@@ -1,4 +1,4 @@
-import { SourceWorker, ImageContext } from "../source-worker";
+import { SourceWorker, ImageContext } from "./source-worker";
 import { getImageType } from "../utils";
 import { ImageResponse } from "../response";
 import { GET, Method, Time } from "@adonix.org/cloud-spark";
