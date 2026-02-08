@@ -11,7 +11,7 @@ interface Source {
     id: string;
     type: string;
     path: string;
-    description?: string;
+    description: string;
 }
 
 interface SourcesConfig {
