@@ -1,6 +1,6 @@
 import { SourceWorker, ImageContext } from "../source";
 import { getImageType } from "../../utils";
-import { ImageResponse } from "../../response";
+import { ImageResponse } from "../../responses";
 import { GET, Method, Time } from "@adonix.org/cloud-spark";
 import { Paths } from "../../routes";
 import { cache } from "@adonix.org/cloud-spark/cache";

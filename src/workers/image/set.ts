@@ -1,5 +1,5 @@
 import { getImageType } from "../../utils";
-import { SuccessJson } from "../../response";
+import { SuccessJson } from "../../responses";
 import { BadRequest, Method, POST } from "@adonix.org/cloud-spark";
 import { AuthImage } from "./auth";
 import { ImageContext } from "../source";

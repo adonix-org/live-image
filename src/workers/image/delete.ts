@@ -1,4 +1,4 @@
-import { SuccessJson } from "../../response";
+import { SuccessJson } from "../../responses";
 import { DELETE, Method } from "@adonix.org/cloud-spark";
 import { AuthImage } from "./auth";
 import { ImageContext } from "../source";
