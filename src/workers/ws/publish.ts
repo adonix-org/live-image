@@ -1,4 +1,4 @@
-import { auth } from "../../middleware/authorization";
+import { auth } from "../../middleware/auth";
 import { Paths } from "../../routes";
 import { WebSocketWorker } from "./worker";
 

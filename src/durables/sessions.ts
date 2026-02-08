@@ -6,8 +6,8 @@ interface Subscriber {
     lastPublish: number;
 }
 
-class Sessions<A extends WSAttachment = WSAttachment> extends WebSocketSessions<A> {
-    public notify(json: unknown, attachment?: Partial<A>): void {
+export class Sessions<A extends WSAttachment = WSAttachment> extends WebSocketSessions<A> {
+    public broadcast(json: unknown, attachment?: Partial<A>): void {
         for (const session of this) {
             if (attachment) {
                 session.attach(attachment);
@@ -32,15 +32,15 @@ export class Subscribers extends Sessions<Subscriber> {
     /**
      * Returns the number of currently active subscribers.
      *
-     * A subscriber is considered active if:
-     *  1. They have acknowledged the latest publish (`lastAcknowledge >= lastPublish`), or
-     *  2. They have not yet acknowledged, but are still within the grace period
-     *     defined by `ACK_THRESHOLD` since the last publish.
+     * A subscriber is considered active if **either**:
+     *   1. They have acknowledged the latest publish (`lastAcknowledge >= lastPublish`), or
+     *   2. They have not yet acknowledged, but the publish is still within the
+     *      grace period defined by `ACK_THRESHOLD`.
      *
-     * This ensures that subscribers are only counted as inactive after the grace
-     * period has elapsed following a publish, giving them time to respond.
+     * This ensures that subscribers are only considered inactive after they
+     * have failed to acknowledge a publish for longer than the threshold.
      *
-     * @returns The count of subscribers who are currently active.
+     * @returns The count of subscribers currently considered active.
      */
     public get active(): number {
         let count = 0;
@@ -57,7 +57,7 @@ export class Subscribers extends Sessions<Subscriber> {
     }
 
     public publish(): void {
-        this.notify({ event: "publish" }, { lastPublish: Date.now() });
+        this.broadcast({ event: "publish" }, { lastPublish: Date.now() });
     }
 
     public acknowledge(ws: WebSocket): void {
@@ -73,6 +73,6 @@ export class Publishers extends Sessions {
         const size = subscribers.size;
         const active = subscribers.active;
         const zombies = size - active;
-        this.notify({ event: "online", active, zombies, subscribers: size, publishers: this.size });
+        this.broadcast({ event: "online", active, zombies, subscribers: size, publishers: this.size });
     }
 }

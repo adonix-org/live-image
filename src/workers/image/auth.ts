@@ -1,5 +1,5 @@
 import { SourceWorker } from "../source";
-import { auth } from "../../middleware/authorization";
+import { auth } from "../../middleware/auth";
 import { Paths } from "../../routes";
 
 export abstract class AuthImage extends SourceWorker {

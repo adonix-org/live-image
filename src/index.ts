@@ -1,5 +1,5 @@
-import { LiveImage } from "./worker/image/live";
+import { LiveImage } from "./workers/image/live";
 
-export { ImageStore } from "./websocket/image-store";
+export { ImageStore } from "./durables/store";
 
 export default LiveImage.ignite();
