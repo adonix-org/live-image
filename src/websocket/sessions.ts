@@ -1,4 +1,4 @@
-import { Time, WebSocketConnection, WSAttachment } from "@adonix.org/cloud-spark";
+import { WebSocketConnection, WSAttachment } from "@adonix.org/cloud-spark";
 import { WebSocketSessions } from "@adonix.org/cloud-spark/sessions";
 
 interface Subscriber {
