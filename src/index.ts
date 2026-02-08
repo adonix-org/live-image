@@ -1,4 +1,4 @@
-import { LiveImage } from "./workers/image/live";
+import { LiveImage } from "./workers/live";
 
 export { ImageStore } from "./durables/store";
 
