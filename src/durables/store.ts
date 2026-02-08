@@ -14,13 +14,13 @@ export class ImageStore extends DurableObject {
         return ImageStore.KEY;
     }
 
+    public async get(): Promise<ArrayBuffer | undefined> {
+        return this.ctx.storage.get<ArrayBuffer>(this.getKey());
+    }
+
     public async put(image: ArrayBuffer): Promise<void> {
         await this.ctx.storage.put<ArrayBuffer>(this.getKey(), image);
         this.broker.notify();
-    }
-
-    public async get(): Promise<ArrayBuffer | undefined> {
-        return this.ctx.storage.get<ArrayBuffer>(this.getKey());
     }
 
     public async delete(): Promise<void> {
@@ -38,10 +38,5 @@ export class ImageStore extends DurableObject {
 
     public override webSocketClose(ws: WebSocket, code: number, reason: string): void {
         this.broker.onClose(ws, code, reason);
-    }
-
-    public override webSocketError(ws: WebSocket, error: unknown): void {
-        console.error(error);
-        this.broker.onClose(ws, 1011, String(error));
     }
 }
