@@ -42,7 +42,7 @@
             const img = document.getElementById("liveImage");
             const status = document.getElementById("status");
 
-            img.src = LIVE_URL + "?t=" + Date.now();
+            img.src = LIVE_URL + "?id=" + Date.now();
 
             let ws;
 
@@ -55,11 +55,13 @@
                 };
 
                 ws.onmessage = (event) => {
-                    console.log("WS message:", event.data);
-                    // Acknowledge publish event.
+                    const json = JSON.parse(event.data);
+
+                    if (json.event !== "publish") return;
+
                     ws.send(JSON.stringify({ event: "ack" }));
 
-                    const newUrl = LIVE_URL + "?t=" + Date.now();
+                    const newUrl = LIVE_URL + "?id=" + json.id;
                     const preload = new Image();
                     preload.onload = () => {
                         img.src = newUrl;

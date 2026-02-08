@@ -57,7 +57,8 @@ export class Subscribers extends Sessions<Subscriber> {
     }
 
     public publish(): void {
-        this.broadcast({ event: "publish" }, { lastPublish: Date.now() });
+        const now = Date.now();
+        this.broadcast({ event: "publish", id: now }, { lastPublish: now });
     }
 
     public acknowledge(ws: WebSocket): void {
@@ -73,6 +74,12 @@ export class Publishers extends Sessions {
         const size = subscribers.size;
         const active = subscribers.active;
         const zombies = size - active;
-        this.broadcast({ event: "online", active, zombies, subscribers: size, publishers: this.size });
+        this.broadcast({
+            event: "online",
+            active,
+            zombies,
+            subscribers: size,
+            publishers: this.size,
+        });
     }
 }
