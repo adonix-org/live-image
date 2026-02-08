@@ -1,24 +1,28 @@
 import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
 import { Publishers, Sessions, Subscribers } from "./sessions";
 
-export class EventBroker {
-    private static readonly SUBSCRIBE = "subscribe";
-    private static readonly PUBLISH = "publish";
+const EventType = {
+    SUBSCRIBE: "subscribe",
+    PUBLISH: "publish",
+} as const;
 
+type EventType = (typeof EventType)[keyof typeof EventType];
+
+export class EventBroker {
     private readonly subscribers = new Subscribers();
     private readonly publishers = new Publishers();
 
     constructor(protected readonly ctx: DurableObjectState) {
-        this.subscribers.restoreAll(this.ctx.getWebSockets(EventBroker.SUBSCRIBE));
-        this.publishers.restoreAll(this.ctx.getWebSockets(EventBroker.PUBLISH));
+        this.subscribers.restoreAll(this.ctx.getWebSockets(EventType.SUBSCRIBE));
+        this.publishers.restoreAll(this.ctx.getWebSockets(EventType.PUBLISH));
     }
 
     public onFetch(request: Request): Promise<Response> {
         const path = new URL(request.url).pathname;
-        if (path.startsWith(`/${EventBroker.PUBLISH}/`)) {
+        if (path.startsWith(`/${EventType.PUBLISH}/`)) {
             return this.publisher();
         }
-        if (path.startsWith(`/${EventBroker.SUBSCRIBE}/`)) {
+        if (path.startsWith(`/${EventType.SUBSCRIBE}/`)) {
             return this.subscriber();
         }
         return new NotFound().response();
@@ -41,14 +45,14 @@ export class EventBroker {
     }
 
     private publisher(): Promise<Response> {
-        return this.connect(this.publishers, EventBroker.PUBLISH);
+        return this.connect(this.publishers, EventType.PUBLISH);
     }
 
     private subscriber(): Promise<Response> {
-        return this.connect(this.subscribers, EventBroker.SUBSCRIBE);
+        return this.connect(this.subscribers, EventType.SUBSCRIBE);
     }
 
-    private connect(sessions: Sessions, type: string): Promise<Response> {
+    private connect(sessions: Sessions, type: EventType): Promise<Response> {
         const client = sessions.create().acceptWebSocket(this.ctx, [type]);
         this.publishers.online(this.subscribers);
         return new WebSocketUpgrade(client).response();
