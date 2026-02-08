@@ -25,8 +25,7 @@ export class GetImage extends SourceWorker {
         if (imageType) {
             return this.response(ImageResponse, image, imageType, {
                 public: true,
-                "max-age": 1,
-                "s-maxage": Time.Day,
+                "s-maxage": 60 * Time.Second,
             });
         }
 
