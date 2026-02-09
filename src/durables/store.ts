@@ -1,31 +1,48 @@
 import { DurableObject } from "cloudflare:workers";
 import { EventBroker } from "./broker";
 
+export interface ImageData {
+    id: number;
+    image: ArrayBuffer;
+    mediaType: string;
+}
+
 export class ImageStore extends DurableObject {
-    private static readonly KEY = "image:array";
+    private static readonly KEY = "image:data";
     private readonly broker: EventBroker;
+    private data: ImageData | undefined;
 
     constructor(ctx: DurableObjectState, env: Env) {
         super(ctx, env);
         this.broker = new EventBroker(ctx);
+
+        this.ctx.blockConcurrencyWhile(async () => {
+            this.data = await this.ctx.storage.get<ImageData>(this.getKey());
+        });
     }
 
     protected getKey(): string {
         return ImageStore.KEY;
     }
 
-    public async get(): Promise<ArrayBuffer | undefined> {
-        return this.ctx.storage.get<ArrayBuffer>(this.getKey());
+    public get(): ImageData | undefined {
+        return this.data;
     }
 
-    public async put(image: ArrayBuffer): Promise<void> {
-        await this.ctx.storage.put<ArrayBuffer>(this.getKey(), image);
-        this.broker.notify();
+    public async put(image: ArrayBuffer, mediaType: string): Promise<void> {
+        const data = {
+            id: Date.now(),
+            image,
+            mediaType,
+        };
+        await this.ctx.storage.put<ImageData>(this.getKey(), data);
+        this.data = data;
+        this.broker.notify(this.data.id);
     }
 
     public async delete(): Promise<void> {
         await this.ctx.storage.delete(this.getKey());
-        this.broker.notify();
+        this.broker.notify(0);
     }
 
     public override fetch(request: Request): Promise<Response> {

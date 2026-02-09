@@ -1,5 +1,6 @@
 import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
 import { Publishers, Sessions, Subscribers } from "./sessions";
+import { ImageData } from "./store";
 
 const EventType = {
     SUBSCRIBE: "subscribe",
@@ -39,8 +40,8 @@ export class EventBroker {
         this.publishers.online(this.subscribers);
     }
 
-    public notify(): void {
-        this.subscribers.publish();
+    public notify(id: number): void {
+        this.subscribers.publish(id);
         this.publishers.online(this.subscribers);
     }
 

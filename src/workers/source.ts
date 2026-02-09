@@ -1,7 +1,7 @@
 import { Method, NotFound, PathParams, RouteWorker } from "@adonix.org/cloud-spark";
 import { ImageStore } from "../durables/store";
 
-export interface ImageContext {
+export interface SourceContext {
     sourceId: string;
     stub: DurableObjectStub<ImageStore>;
     params: PathParams;
@@ -19,7 +19,7 @@ interface SourcesConfig {
 }
 
 export abstract class SourceWorker extends RouteWorker {
-    protected abstract process(context: ImageContext): Promise<Response>;
+    protected abstract process(context: SourceContext): Promise<Response>;
     protected abstract get path(): string;
     protected abstract get method(): Method;
 

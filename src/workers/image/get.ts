@@ -1,5 +1,4 @@
-import { SourceWorker, ImageContext } from "../source";
-import { getImageType } from "../../utils";
+import { SourceWorker, SourceContext } from "../source";
 import { ImageResponse } from "../../responses";
 import { GET, Method, Time } from "@adonix.org/cloud-spark";
 import { Paths } from "../../routes";
@@ -19,13 +18,12 @@ export class GetImage extends SourceWorker {
         this.use(cache());
     }
 
-    protected async process(context: ImageContext): Promise<Response> {
-        const image = await context.stub.get();
-        const imageType = image && getImageType(image);
-        if (imageType) {
-            return this.response(ImageResponse, image, imageType, {
+    protected async process(context: SourceContext): Promise<Response> {
+        const data = await context.stub.get();
+        if (data) {
+            return this.response(ImageResponse, data, {
                 public: true,
-                "s-maxage": 60 * Time.Second,
+                "s-maxage": 30 * Time.Second,
             });
         }
 

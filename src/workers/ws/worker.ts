@@ -1,5 +1,5 @@
 import { GET, Method } from "@adonix.org/cloud-spark";
-import { SourceWorker, ImageContext } from "../source";
+import { SourceWorker, SourceContext } from "../source";
 import { websocket } from "@adonix.org/cloud-spark/websocket";
 
 export abstract class WebSocketWorker extends SourceWorker {
@@ -12,7 +12,7 @@ export abstract class WebSocketWorker extends SourceWorker {
         this.use(websocket());
     }
 
-    protected async process(context: ImageContext): Promise<Response> {
+    protected async process(context: SourceContext): Promise<Response> {
         return context.stub.fetch(this.request);
     }
 }

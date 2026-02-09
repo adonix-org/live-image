@@ -1,5 +1,6 @@
 import { WebSocketConnection, WSAttachment } from "@adonix.org/cloud-spark";
 import { WebSocketSessions } from "@adonix.org/cloud-spark/sessions";
+import { ImageData } from "./store";
 
 interface Subscriber {
     lastAcknowledge: number;
@@ -9,15 +10,19 @@ interface Subscriber {
 export class Sessions<A extends WSAttachment = WSAttachment> extends WebSocketSessions<A> {
     public broadcast(json: unknown, attachment?: Partial<A>): void {
         for (const session of this) {
-            if (attachment) {
-                session.attach(attachment);
-            }
-            try {
-                session.send(JSON.stringify(json));
-            } catch (error) {
-                console.error(error);
-                session.close(1011, String(error));
-            }
+            this.send(session, json, attachment);
+        }
+    }
+
+    public send(session: WebSocketConnection<A>, json: unknown, attachment?: Partial<A>): void {
+        if (attachment) {
+            session.attach(attachment);
+        }
+        try {
+            session.send(JSON.stringify(json));
+        } catch (error) {
+            console.error(error);
+            session.close(1011, String(error));
         }
     }
 }
@@ -56,9 +61,9 @@ export class Subscribers extends Sessions<Subscriber> {
         return count;
     }
 
-    public publish(): void {
+    public publish(id: number): void {
         const now = Date.now();
-        this.broadcast({ event: "publish", id: now }, { lastPublish: now });
+        this.broadcast({ event: "publish", id }, { lastPublish: now });
     }
 
     public acknowledge(ws: WebSocket): void {
