@@ -1,5 +1,4 @@
 import { GET, RouteTuple, Time } from "@adonix.org/cloud-spark";
-import { cache } from "@adonix.org/cloud-spark/cache";
 
 import { ImageResponse } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
