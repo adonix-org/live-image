@@ -2,6 +2,15 @@ import { RouteWorker, Method, DELETE, GET, HEAD, OPTIONS, POST } from "@adonix.o
 import { Routes } from "../routes";
 
 export class LiveImage extends RouteWorker {
+    constructor(request: Request, env: Env, ctx: ExecutionContext) {
+        const headers = new Headers(request.headers);
+        headers.delete("cache-control");
+        headers.delete("pragma");
+        headers.delete("accept-language");
+
+        super(new Request(request, { headers }), env, ctx);
+    }
+
     protected override init(): void {
         this.routes(Routes);
     }
