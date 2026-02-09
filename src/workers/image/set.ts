@@ -1,5 +1,6 @@
-import { SuccessJson, UnsupportedMediaType } from "../../responses";
 import { BadRequest, POST, RouteTuple } from "@adonix.org/cloud-spark";
+
+import { SuccessJson, UnsupportedMediaType } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
 
 export class SetImage extends SourceWorker {

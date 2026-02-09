@@ -1,9 +1,10 @@
-import { SuccessJson } from "../../responses";
 import { DELETE, RouteTuple } from "@adonix.org/cloud-spark";
+
+import { SuccessJson } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
 
 export class DeleteImage extends SourceWorker {
-    public static readonly ROUTE: RouteTuple = [DELETE, "/live/:source", DeleteImage];
+    public static readonly ROUTE: RouteTuple = [DELETE, "/live/:source", this];
 
     protected override getRoute(): RouteTuple {
         return DeleteImage.ROUTE;

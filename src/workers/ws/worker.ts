@@ -1,5 +1,6 @@
-import { SourceWorker, SourceContext } from "../source";
 import { websocket } from "@adonix.org/cloud-spark/websocket";
+
+import { SourceWorker, SourceContext } from "../source";
 
 export abstract class WebSocketWorker extends SourceWorker {
     protected override init(): void {

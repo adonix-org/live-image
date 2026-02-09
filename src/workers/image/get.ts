@@ -1,10 +1,11 @@
-import { SourceWorker, SourceContext } from "../source";
-import { ImageResponse } from "../../responses";
 import { GET, RouteTuple, Time } from "@adonix.org/cloud-spark";
 import { cache } from "@adonix.org/cloud-spark/cache";
 
+import { SourceWorker, SourceContext } from "../source";
+import { ImageResponse } from "../../responses";
+
 export class GetImage extends SourceWorker {
-    public static readonly ROUTE: RouteTuple = [GET, "/live/:source", GetImage];
+    public static readonly ROUTE: RouteTuple = [GET, "/live/:source", this];
 
     protected override getRoute(): RouteTuple {
         return GetImage.ROUTE;

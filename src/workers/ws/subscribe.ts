@@ -1,4 +1,5 @@
 import { GET, RouteTuple } from "@adonix.org/cloud-spark";
+
 import { WebSocketWorker } from "./worker";
 
 export class Subscribe extends WebSocketWorker {
