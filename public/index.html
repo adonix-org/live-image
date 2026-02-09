@@ -56,17 +56,16 @@
 
                 ws.onmessage = (event) => {
                     const json = JSON.parse(event.data);
-
                     if (json.event !== "publish") return;
 
                     ws.send(JSON.stringify({ event: "ack" }));
 
                     const newUrl = LIVE_URL + "/" + json.id;
                     const preload = new Image();
-                    preload.onload = () => {
-                        img.src = newUrl;
-                    };
                     preload.src = newUrl;
+                    preload.onload = () => {
+                        img.src = preload.src;
+                    };
                 };
 
                 ws.onclose = () => {
