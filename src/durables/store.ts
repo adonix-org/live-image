@@ -50,8 +50,8 @@ export class ImageStore extends DurableObject {
         return this.broker.onFetch(request);
     }
 
-    public override webSocketMessage(ws: WebSocket, message: string): void {
-        this.broker.onMessage(ws, message);
+    public override webSocketMessage(ws: WebSocket): void {
+        this.broker.onMessage(ws);
     }
 
     public override webSocketClose(ws: WebSocket, code: number, reason: string): void {
