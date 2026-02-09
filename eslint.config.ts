@@ -20,7 +20,7 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig([
     {
-        files: ["src/**/*.ts_disable"],
+        files: ["src/**/*.ts"],
         plugins: { import: importPlugin },
         extends: [tseslint.configs.recommended],
         rules: {

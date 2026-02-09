@@ -1,4 +1,5 @@
 import { RouteTable } from "@adonix.org/cloud-spark";
+
 import { DeleteImage } from "./workers/image/delete";
 import { GetImage } from "./workers/image/get";
 import { SetImage } from "./workers/image/set";

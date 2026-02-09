@@ -1,4 +1,4 @@
-import { RouteWorker, Method, DELETE, GET, HEAD, OPTIONS, POST } from "@adonix.org/cloud-spark";
+import { DELETE, GET, HEAD, Method, OPTIONS, POST, RouteWorker } from "@adonix.org/cloud-spark";
 
 import { Routes } from "../routes";
 

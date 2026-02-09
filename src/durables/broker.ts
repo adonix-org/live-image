@@ -1,6 +1,6 @@
 import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
+
 import { Publishers, Sessions, Subscribers } from "./sessions";
-import { ImageData } from "./store";
 
 const EventType = {
     SUBSCRIBE: "subscribe",
@@ -29,7 +29,7 @@ export class EventBroker {
         return new NotFound().response();
     }
 
-    public onMessage(ws: WebSocket, message: string): void {
+    public onMessage(ws: WebSocket): void {
         this.subscribers.acknowledge(ws);
     }
 

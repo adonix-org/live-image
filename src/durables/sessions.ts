@@ -1,6 +1,5 @@
 import { WebSocketConnection, WSAttachment } from "@adonix.org/cloud-spark";
 import { WebSocketSessions } from "@adonix.org/cloud-spark/sessions";
-import { ImageData } from "./store";
 
 interface Subscriber {
     lastAcknowledge: number;
