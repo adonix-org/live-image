@@ -1,4 +1,5 @@
 import { RouteWorker, Method, DELETE, GET, HEAD, OPTIONS, POST } from "@adonix.org/cloud-spark";
+
 import { Routes } from "../routes";
 
 export class LiveImage extends RouteWorker {

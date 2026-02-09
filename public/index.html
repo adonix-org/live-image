@@ -61,7 +61,7 @@
 
                     ws.send(JSON.stringify({ event: "ack" }));
 
-                    const newUrl = LIVE_URL + "?id=" + json.id;
+                    const newUrl = LIVE_URL + "/" + json.id;
                     const preload = new Image();
                     preload.onload = () => {
                         img.src = newUrl;
