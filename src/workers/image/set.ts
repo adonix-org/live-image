@@ -1,14 +1,15 @@
 import { SuccessJson, UnsupportedMediaType } from "../../responses";
-import { BadRequest, Method, POST } from "@adonix.org/cloud-spark";
-import { AuthImage } from "./auth";
-import { SourceContext } from "../source";
+import { BadRequest, POST, RouteTuple } from "@adonix.org/cloud-spark";
+import { SourceContext, SourceWorker } from "../source";
 
-export class SetImage extends AuthImage {
-    protected get method(): Method {
-        return POST;
+export class SetImage extends SourceWorker {
+    public static readonly ROUTE: RouteTuple = [POST, "/live/:source", SetImage];
+
+    protected override getRoute(): RouteTuple {
+        return SetImage.ROUTE;
     }
 
-    protected async process(context: SourceContext): Promise<Response> {
+    protected async respond(context: SourceContext): Promise<Response> {
         const image = await this.request.arrayBuffer();
         if (image.byteLength === 0) {
             return this.response(BadRequest, "Missing image.");

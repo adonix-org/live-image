@@ -1,4 +1,4 @@
-import { Method, NotFound, PathParams, RouteWorker } from "@adonix.org/cloud-spark";
+import { Method, NotFound, PathParams, RouteTuple, RouteWorker } from "@adonix.org/cloud-spark";
 import { ImageStore } from "../durables/store";
 
 export interface SourceContext {
@@ -19,16 +19,16 @@ interface SourcesConfig {
 }
 
 export abstract class SourceWorker extends RouteWorker {
-    protected abstract process(context: SourceContext): Promise<Response>;
-    protected abstract get path(): string;
-    protected abstract get method(): Method;
+    protected abstract respond(context: SourceContext): Promise<Response>;
+    protected abstract getRoute(): RouteTuple;
 
     public override getAllowedMethods(): Method[] {
-        return [this.method];
+        return [this.getRoute()[0]];
     }
 
     protected override init(): void {
-        this.route(this.method, this.path, this.handler);
+        const route = this.getRoute();
+        this.route(route[0], route[1], this.handler);
     }
 
     private async handler(params: PathParams): Promise<Response> {
@@ -49,6 +49,6 @@ export abstract class SourceWorker extends RouteWorker {
         }
         const stub = this.env.IMAGE_STORE.getByName(sourceId);
 
-        return this.process({ sourceId, stub, params });
+        return this.respond({ sourceId, stub, params });
     }
 }

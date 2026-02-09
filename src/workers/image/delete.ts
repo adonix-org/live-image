@@ -1,14 +1,15 @@
 import { SuccessJson } from "../../responses";
-import { DELETE, Method } from "@adonix.org/cloud-spark";
-import { AuthImage } from "./auth";
-import { SourceContext } from "../source";
+import { DELETE, RouteTuple } from "@adonix.org/cloud-spark";
+import { SourceContext, SourceWorker } from "../source";
 
-export class DeleteImage extends AuthImage {
-    protected get method(): Method {
-        return DELETE;
+export class DeleteImage extends SourceWorker {
+    public static readonly ROUTE: RouteTuple = [DELETE, "/live/:source", DeleteImage];
+
+    protected override getRoute(): RouteTuple {
+        return DeleteImage.ROUTE;
     }
 
-    protected async process(context: SourceContext): Promise<Response> {
+    protected override async respond(context: SourceContext): Promise<Response> {
         await context.stub.delete();
         return this.response(SuccessJson, "Image deleted.");
     }

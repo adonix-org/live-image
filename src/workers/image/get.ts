@@ -1,16 +1,13 @@
 import { SourceWorker, SourceContext } from "../source";
 import { ImageResponse } from "../../responses";
-import { GET, Method, Time } from "@adonix.org/cloud-spark";
-import { Paths } from "../../routes";
+import { GET, RouteTuple, Time } from "@adonix.org/cloud-spark";
 import { cache } from "@adonix.org/cloud-spark/cache";
 
 export class GetImage extends SourceWorker {
-    protected get method(): Method {
-        return GET;
-    }
+    public static readonly ROUTE: RouteTuple = [GET, "/live/:source", GetImage];
 
-    protected get path(): string {
-        return Paths.liveImage;
+    protected override getRoute(): RouteTuple {
+        return GetImage.ROUTE;
     }
 
     protected override init(): void {
@@ -18,7 +15,7 @@ export class GetImage extends SourceWorker {
         this.use(cache());
     }
 
-    protected async process(context: SourceContext): Promise<Response> {
+    protected override async respond(context: SourceContext): Promise<Response> {
         const data = await context.stub.get();
         if (data) {
             return this.response(ImageResponse, data, {

@@ -1,8 +1,10 @@
-import { Paths } from "../../routes";
+import { GET, RouteTuple } from "@adonix.org/cloud-spark";
 import { WebSocketWorker } from "./worker";
 
 export class Subscribe extends WebSocketWorker {
-    protected get path(): string {
-        return Paths.subscribe;
+    public static readonly ROUTE: RouteTuple = [GET, "/subscribe/:source", Subscribe];
+
+    protected override getRoute(): RouteTuple {
+        return Subscribe.ROUTE;
     }
 }

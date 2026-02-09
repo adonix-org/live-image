@@ -1,10 +1,12 @@
+import { GET, RouteTuple } from "@adonix.org/cloud-spark";
 import { auth } from "../../middleware/auth";
-import { Paths } from "../../routes";
 import { WebSocketWorker } from "./worker";
 
 export class Publish extends WebSocketWorker {
-    protected get path(): string {
-        return Paths.publish;
+    public static readonly ROUTE: RouteTuple = [GET, "/publish/:source", Publish];
+
+    protected override getRoute(): RouteTuple {
+        return Publish.ROUTE;
     }
 
     protected override init(): void {
