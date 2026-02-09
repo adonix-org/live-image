@@ -21,11 +21,6 @@ const Cache = {
 export class GetImage extends SourceWorker {
     public static readonly ROUTE: RouteTuple = [GET, "/live/:source{/:id}", this];
 
-    protected override init(): void {
-        super.init();
-        this.use(cache());
-    }
-
     protected override async respond(context: SourceContext): Promise<Response> {
         const data = await context.stub.get();
         if (!data) {
