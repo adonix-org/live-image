@@ -23,7 +23,8 @@ export class GetImage extends SourceWorker {
         if (data) {
             return this.response(ImageResponse, data, {
                 public: true,
-                "s-maxage": 30 * Time.Second,
+                "max-age": Time.Minute,
+                "s-maxage": Time.Minute,
             });
         }
 

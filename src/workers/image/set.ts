@@ -18,7 +18,7 @@ export class SetImage extends AuthImage {
         if (!mediaType) {
             return this.response(UnsupportedMediaType, "Missing Content-Type header.");
         }
-        if (!mediaType.startsWith("image/")) {
+        if (!mediaType.toLowerCase().startsWith("image/")) {
             return this.response(UnsupportedMediaType, mediaType);
         }
 
