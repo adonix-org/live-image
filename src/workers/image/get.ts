@@ -7,10 +7,6 @@ import { ImageResponse } from "../../responses";
 export class GetImage extends SourceWorker {
     public static readonly ROUTE: RouteTuple = [GET, "/live/:source", this];
 
-    protected override getRoute(): RouteTuple {
-        return GetImage.ROUTE;
-    }
-
     protected override init(): void {
         super.init();
         this.use(cache());

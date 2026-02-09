@@ -4,11 +4,7 @@ import { SuccessJson, UnsupportedMediaType } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
 
 export class SetImage extends SourceWorker {
-    public static readonly ROUTE: RouteTuple = [POST, "/live/:source", SetImage];
-
-    protected override getRoute(): RouteTuple {
-        return SetImage.ROUTE;
-    }
+    public static readonly ROUTE: RouteTuple = [POST, "/live/:source", this];
 
     protected async respond(context: SourceContext): Promise<Response> {
         const image = await this.request.arrayBuffer();

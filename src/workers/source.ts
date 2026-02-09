@@ -20,7 +20,16 @@ interface SourcesConfig {
 
 export abstract class SourceWorker extends RouteWorker {
     protected abstract respond(context: SourceContext): Promise<Response>;
-    protected abstract getRoute(): RouteTuple;
+    protected static readonly ROUTE: RouteTuple;
+
+    protected getRoute(): RouteTuple {
+        const ctor = this.constructor as typeof SourceWorker & { name: string };
+        const route = ctor.ROUTE;
+        if (!route) {
+            throw new Error(`${ctor.name} must define static ROUTE`);
+        }
+        return route;
+    }
 
     public override getAllowedMethods(): Method[] {
         return [this.getRoute()[0]];
