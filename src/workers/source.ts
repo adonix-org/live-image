@@ -27,7 +27,7 @@ export abstract class SourceWorker extends RouteWorker {
         const ctor = this.constructor as typeof SourceWorker & { name: string };
         const route = ctor.ROUTE;
         if (!route) {
-            throw new Error(`${ctor.name} must define static ROUTE`);
+            throw new Error(`${ctor.name} must define static ROUTE.`);
         }
         return route;
     }
@@ -44,7 +44,7 @@ export abstract class SourceWorker extends RouteWorker {
     private async handler(params: PathParams): Promise<Response> {
         const sourceId = params["source"];
         if (!sourceId) {
-            return this.response(NotFound, "Missing source.");
+            return this.response(NotFound, "Path is missing source.");
         }
 
         const response = await this.env.ASSETS.fetch(new URL("/sources.json", this.request.url));
@@ -55,7 +55,7 @@ export abstract class SourceWorker extends RouteWorker {
         const json = (await response.json()) as SourcesConfig;
         const allowed = json.sources.some((s) => s.id === sourceId);
         if (!allowed) {
-            return this.response(NotFound, "Invalid source.");
+            return this.response(NotFound, "Source not found.");
         }
         const stub = this.env.IMAGE_STORE.getByName(sourceId);
 
