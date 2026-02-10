@@ -9,7 +9,7 @@ export interface ImageData {
 }
 
 export class ImageStore extends DurableObject {
-    private static readonly KEY = "image:data";
+    private static readonly DATA_KEY = "image:data";
     private readonly broker: EventBroker;
     private data: ImageData | undefined;
 
@@ -18,15 +18,11 @@ export class ImageStore extends DurableObject {
         this.broker = new EventBroker(ctx);
 
         this.ctx.blockConcurrencyWhile(async () => {
-            this.data = await this.ctx.storage.get<ImageData>(this.getKey());
+            this.data = await this.ctx.storage.get<ImageData>(ImageStore.DATA_KEY);
         });
     }
 
-    protected getKey(): string {
-        return ImageStore.KEY;
-    }
-
-    public get(): ImageData | undefined {
+    public async get(): Promise<ImageData | undefined> {
         return this.data;
     }
 
@@ -36,13 +32,13 @@ export class ImageStore extends DurableObject {
             image,
             mediaType,
         };
-        await this.ctx.storage.put<ImageData>(this.getKey(), data);
+        await this.ctx.storage.put<ImageData>(ImageStore.DATA_KEY, data);
         this.data = data;
         this.broker.notify(this.data.id);
     }
 
     public async delete(): Promise<void> {
-        await this.ctx.storage.delete(this.getKey());
+        await this.ctx.storage.deleteAll();
         this.broker.notify(0);
     }
 

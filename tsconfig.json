@@ -50,6 +50,43 @@
         /* Enable all strict type-checking options. */
         "strict": true,
 
+        /* Explicit override enforcement. */
+        "noImplicitOverride": true,
+
+        /* Exact optional property types, prevents accidental null/undefined bugs */
+        "exactOptionalPropertyTypes": true,
+
+        /* Catch unsafe indexed access */
+        "noUncheckedIndexedAccess": true,
+
+        /* Prevent assigning to `any` without explicit cast */
+        "noImplicitAny": true,
+
+        /* Force type annotations on functions when useful */
+        "strictFunctionTypes": true,
+
+        /* Enforce proper bind/call/apply usage */
+        "strictBindCallApply": true,
+
+        /* Prevent `this` being implicitly `any` */
+        "noImplicitThis": true,
+
+        /* Require that class properties are initialized or marked optional */
+        "strictPropertyInitialization": true,
+
+        /* Always emit 'use strict' */
+        "alwaysStrict": true,
+
+        /* Catch unsafe catch clause variables */
+        "useUnknownInCatchVariables": true,
+
+        /* Ban unreachable code */
+        "noFallthroughCasesInSwitch": true,
+
+        /* Warn on unused locals/params */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+
         /* Skip type checking all .d.ts files. */
         "skipLibCheck": true
     },

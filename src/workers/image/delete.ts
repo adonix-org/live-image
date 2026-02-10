@@ -4,7 +4,7 @@ import { SuccessJson } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
 
 export class DeleteImage extends SourceWorker {
-    public static readonly ROUTE: RouteTuple = [DELETE, "/live/:source", this];
+    public static override readonly ROUTE: RouteTuple = [DELETE, "/live/:source", this];
 
     protected override async respond(context: SourceContext): Promise<Response> {
         await context.stub.delete();

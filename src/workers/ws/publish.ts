@@ -5,7 +5,7 @@ import { auth } from "../../middleware/auth";
 import { WebSocketBase } from "./base";
 
 export class Publish extends WebSocketBase {
-    public static readonly ROUTE: RouteTuple = [GET, "/publish/:source", this];
+    public static override readonly ROUTE: RouteTuple = [GET, "/publish/:source", this];
 
     protected override init(): void {
         super.init();
