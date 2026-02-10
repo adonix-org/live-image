@@ -3,8 +3,8 @@ import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
 import { Publishers, Sessions, Subscribers } from "./sessions";
 
 const Role = {
-    SUBSCRIBE: "subscribe",
-    PUBLISH: "publish",
+    SUBSCRIBER: "subscriber",
+    PUBLISHER: "publisher",
 } as const;
 
 type Role = (typeof Role)[keyof typeof Role];
@@ -14,17 +14,17 @@ export class EventBroker {
     private readonly publishers = new Publishers();
 
     constructor(protected readonly ctx: DurableObjectState) {
-        this.publishers.restoreAll(this.ctx.getWebSockets(Role.PUBLISH));
-        this.subscribers.restoreAll(this.ctx.getWebSockets(Role.SUBSCRIBE));
+        this.publishers.restoreAll(this.ctx.getWebSockets(Role.PUBLISHER));
+        this.subscribers.restoreAll(this.ctx.getWebSockets(Role.SUBSCRIBER));
     }
 
     public onFetch(request: Request): Promise<Response> {
         const path = new URL(request.url).pathname;
-        if (path.startsWith(`/${Role.PUBLISH}/`)) {
-            return this.connect(this.publishers, Role.PUBLISH);
+        if (path.startsWith(`/${Role.PUBLISHER}/`)) {
+            return this.connect(this.publishers, Role.PUBLISHER);
         }
-        if (path.startsWith(`/${Role.SUBSCRIBE}/`)) {
-            return this.connect(this.subscribers, Role.SUBSCRIBE);
+        if (path.startsWith(`/${Role.SUBSCRIBER}/`)) {
+            return this.connect(this.subscribers, Role.SUBSCRIBER);
         }
         return new NotFound().response();
     }

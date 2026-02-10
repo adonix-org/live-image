@@ -36,7 +36,7 @@
         (() => {
             const cameraId = "c121";
 
-            const WS_URL = new URL(`/subscribe/${cameraId}`, globalThis.window.origin).href.replace(/^http/, "ws");
+            const WS_URL = new URL(`/subscriber/${cameraId}`, globalThis.window.origin).href.replace(/^http/, "ws");
             const LIVE_URL = new URL(`/live/${cameraId}`, globalThis.window.origin).href;
 
             const img = document.getElementById("liveImage");
