@@ -1,7 +1,7 @@
 import { GET, RouteTuple } from "@adonix.org/cloud-spark";
 
-import { WebSocketWorker } from "./worker";
+import { WebSocketBase } from "./base";
 
-export class Subscribe extends WebSocketWorker {
+export class Subscribe extends WebSocketBase {
     public static readonly ROUTE: RouteTuple = [GET, "/subscribe/:source", this];
 }
