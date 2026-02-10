@@ -2,29 +2,29 @@ import { NotFound, WebSocketUpgrade } from "@adonix.org/cloud-spark";
 
 import { Publishers, Sessions, Subscribers } from "./sessions";
 
-const EventType = {
+const Role = {
     SUBSCRIBE: "subscribe",
     PUBLISH: "publish",
 } as const;
 
-type EventType = (typeof EventType)[keyof typeof EventType];
+type Role = (typeof Role)[keyof typeof Role];
 
 export class EventBroker {
     private readonly subscribers = new Subscribers();
     private readonly publishers = new Publishers();
 
     constructor(protected readonly ctx: DurableObjectState) {
-        this.publishers.restoreAll(this.ctx.getWebSockets(EventType.PUBLISH));
-        this.subscribers.restoreAll(this.ctx.getWebSockets(EventType.SUBSCRIBE));
+        this.publishers.restoreAll(this.ctx.getWebSockets(Role.PUBLISH));
+        this.subscribers.restoreAll(this.ctx.getWebSockets(Role.SUBSCRIBE));
     }
 
     public onFetch(request: Request): Promise<Response> {
         const path = new URL(request.url).pathname;
-        if (path.startsWith(`/${EventType.PUBLISH}/`)) {
-            return this.connect(this.publishers, EventType.PUBLISH);
+        if (path.startsWith(`/${Role.PUBLISH}/`)) {
+            return this.connect(this.publishers, Role.PUBLISH);
         }
-        if (path.startsWith(`/${EventType.SUBSCRIBE}/`)) {
-            return this.connect(this.subscribers, EventType.SUBSCRIBE);
+        if (path.startsWith(`/${Role.SUBSCRIBE}/`)) {
+            return this.connect(this.subscribers, Role.SUBSCRIBE);
         }
         return new NotFound().response();
     }
@@ -45,7 +45,7 @@ export class EventBroker {
         this.publishers.online(this.subscribers);
     }
 
-    private connect(sessions: Sessions, type: EventType): Promise<Response> {
+    private connect(sessions: Sessions, type: Role): Promise<Response> {
         const client = sessions.create().acceptWebSocket(this.ctx, [type]);
         this.publishers.online(this.subscribers);
         return new WebSocketUpgrade(client).response();
