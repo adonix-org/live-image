@@ -1,4 +1,5 @@
 import { GET, RouteTuple, Time } from "@adonix.org/cloud-spark";
+import { cache, stripSearchParams } from "@adonix.org/cloud-spark/cache";
 
 import { ImageResponse } from "../../responses";
 import { SourceContext, SourceWorker } from "../source";
@@ -19,6 +20,11 @@ const Cache = {
 
 export class GetImage extends SourceWorker {
     public static override readonly ROUTE: RouteTuple = [GET, "/live/:source{/:id}", this];
+
+    protected override init(): void {
+        super.init();
+        this.use(cache({ getKey: stripSearchParams, debug: true }));
+    }
 
     protected override async respond(context: SourceContext): Promise<Response> {
         const data = await context.stub.get();

@@ -1,5 +1,4 @@
 import { DELETE, GET, HEAD, Method, OPTIONS, POST, RouteWorker } from "@adonix.org/cloud-spark";
-import { cache } from "@adonix.org/cloud-spark/cache";
 
 import { Routes } from "../routes";
 
@@ -15,8 +14,6 @@ export class LiveImage extends RouteWorker {
 
     protected override init(): void {
         this.routes(Routes);
-
-        this.use(cache({ debug: true }));
     }
 
     public override getAllowedMethods(): Method[] {
