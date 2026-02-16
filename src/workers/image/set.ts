@@ -1,9 +1,11 @@
 import { BadRequest, POST, RouteTuple } from "@adonix.org/cloud-spark";
 
 import { SuccessJson, UnsupportedMediaType } from "../../responses";
-import { SourceContext, SourceWorker } from "../source";
+import { SourceContext } from "../source";
 
-export class SetImage extends SourceWorker {
+import { AuthWorker } from "./auth";
+
+export class SetImage extends AuthWorker {
     public static override readonly ROUTE: RouteTuple = [POST, "/live/:source", this];
 
     protected async respond(context: SourceContext): Promise<Response> {
