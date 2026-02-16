@@ -60,7 +60,7 @@ export class Subscribers extends Sessions<Subscriber> {
         return count;
     }
 
-    public publish(id: number): void {
+    public notify(id: number): void {
         const now = Date.now();
         this.broadcast({ event: "publish", id }, { lastPublish: now });
     }

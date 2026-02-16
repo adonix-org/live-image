@@ -41,7 +41,7 @@ export class EventBroker {
     }
 
     public notify(id: number): void {
-        this.subscribers.publish(id);
+        this.subscribers.notify(id);
         this.publishers.online(this.subscribers);
     }
 
