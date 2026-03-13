@@ -37,12 +37,20 @@
                 "name": "IMAGE_STORE",
                 "class_name": "ImageStore",
             },
+            {
+                "name": "IMAGE_STREAM",
+                "class_name": "ImageStream",
+            },
         ],
     },
     "migrations": [
         {
             "tag": "v1",
             "new_sqlite_classes": ["ImageStore"],
+        },
+        {
+            "tag": "v1",
+            "new_sqlite_classes": ["ImageStream"],
         },
     ],
 }

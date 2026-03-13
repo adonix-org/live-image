@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Live Image Viewer</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #111;
+            color: #eee;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        img {
+            max-height: 85vh;
+            border: 2px solid #444;
+            border-radius: 8px;
+        }
+
+        #status {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="status">Connecting to WebSocket…</div>
+    <img id="liveImage" src="" alt="Live feed" />
+
+    <script>
+        (() => {
+            const cameraId = "c121";
+
+            const WS_URL = new URL(`/listen/${cameraId}`, globalThis.window.origin).href.replace(/^http/, "ws");
+
+            const img = document.getElementById("liveImage");
+            const status = document.getElementById("status");
+
+            let ws;
+
+            function connect() {
+                ws = new WebSocket(WS_URL);
+                ws.binaryType = "arraybuffer";
+
+                ws.onopen = () => {
+                    status.textContent = "Online 🟢";
+                    console.log("WS connected");
+                };
+
+                ws.onmessage = (event) => {
+                    const blob = new Blob([event.data], { type: "image/jpeg" });
+                    const url = URL.createObjectURL(blob);
+
+                    img.onload = () => URL.revokeObjectURL(url);
+                    img.src = url;
+                };
+
+                ws.onclose = () => {
+                    status.textContent = "Offline 🔴 reconnecting...";
+                    console.log("WS closed, reconnecting...");
+                    setTimeout(connect, 2000);
+                };
+
+                ws.onerror = (err) => {
+                    console.error("WS error:", err);
+                    ws.close();
+                };
+            }
+
+            connect();
+        })();
+    </script>
+
+</body>
+
+</html>
