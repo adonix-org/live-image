@@ -46,11 +46,7 @@
     "migrations": [
         {
             "tag": "v1",
-            "new_sqlite_classes": ["ImageStore"],
-        },
-        {
-            "tag": "v1",
-            "new_sqlite_classes": ["ImageStream"],
+            "new_sqlite_classes": ["ImageStore", "ImageStream"],
         },
     ],
 }
