@@ -3,8 +3,8 @@ import { WebSocketSessions } from "@adonix.org/cloud-spark/sessions";
 import { DurableObject } from "cloudflare:workers";
 
 export class ImageStream extends DurableObject {
-    private broadcasters = new WebSocketSessions();
-    private listeners = new WebSocketSessions();
+    private readonly broadcasters = new WebSocketSessions();
+    private readonly listeners = new WebSocketSessions();
 
     constructor(ctx: DurableObjectState, env: Env) {
         super(ctx, env);
