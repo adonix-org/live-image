@@ -31,9 +31,9 @@ export class ImageStream extends DurableObject {
     }
 
     public override webSocketMessage(ws: WebSocket, message: ArrayBuffer): void {
-        const broadcaster = this.broadcasters.get(ws);
-        if (!broadcaster) {
+        if (this.broadcasters.get(ws) === undefined) {
             ws.close();
+            return;
         }
 
         for (const listener of this.listeners) {
