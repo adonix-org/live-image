@@ -1,4 +1,5 @@
 import { GET, NotFound, PathParams, RouteTuple, RouteWorker } from "@adonix.org/cloud-spark";
+import { websocket } from "@adonix.org/cloud-spark/websocket";
 
 import { auth } from "../../middleware/auth";
 
@@ -20,8 +21,9 @@ export class Broadcast extends StreamWorker {
         super.init();
 
         this.use(auth());
+        this.use(websocket(Broadcast.ROUTE[1]));
 
-        this.route(Listen.ROUTE[0], Broadcast.ROUTE[1], this.connect);
+        this.route(Broadcast.ROUTE[0], Broadcast.ROUTE[1], this.connect);
     }
 }
 
@@ -30,6 +32,8 @@ export class Listen extends StreamWorker {
 
     protected override init(): void {
         super.init();
+
+        this.use(websocket(Broadcast.ROUTE[1]));
 
         this.route(Listen.ROUTE[0], Listen.ROUTE[1], this.connect);
     }
